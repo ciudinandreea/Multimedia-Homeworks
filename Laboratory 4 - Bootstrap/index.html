@@ -7,160 +7,70 @@
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles/style.css"> 
 </head>
 
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-2 col-md-3 col-sm-6 col-12 mb-4">
-                <div class="card">
-                    <img src="assets/img/1.jpg" class="card-img-top" alt="Album cover">
-                    <div class="card-body">
-                        <h5 class="card-title">Iron Maiden</h5>
-                        <p class="card-text">Brave New World</p>
-                        <hr>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Tracklist
-                        </button>
-                    </div>
+    <div class="container my-5">
+        <h1 class="mb-4 text-center">Dynamic Music Library</h1>
+
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-6">
+                <input type="text" id="albumSearch" class="form-control" placeholder="Căutare după artist sau album...">
+            </div>
+            <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                <div class="dropdown d-inline-block">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="sortButton">
+                        Sort: Artist (A-Z)
+                    </button>
+                    <ul class="dropdown-menu" id="sortOptions">
+                        <li><a class="dropdown-item" href="#" data-sort="artist-asc">Artist (A-Z)</a></li>
+                        <li><a class="dropdown-item" href="#" data-sort="album-asc">Album (A-Z)</a></li>
+                        <li><a class="dropdown-item" href="#" data-sort="tracks-asc">No. tracks (Asc.)</a></li>
+                        <li><a class="dropdown-item" href="#" data-sort="tracks-desc">No. tracks (Desc.)</a></li>
+                    </ul>
                 </div>
             </div>
-            <div class="col-xl-2 col-md-3 col-sm-6 col-12 mb-4">
-                <div class="card">
-                    <img src="assets/img/2.jpg" class="card-img-top" alt="Album cover">
-                    <div class="card-body">
-                        <h5 class="card-title">Killswitch Engage</h5>
-                        <p class="card-text">As Daylight Dies</p>
-                        <hr>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Tracklist
-                        </button>
-                    </div>
-                </div>
+        </div>
+
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-4" id="albumGrid">
             </div>
-            <div class="col-xl-2 col-md-3 col-sm-6 col-12 mb-4">
-                <div class="card">
-                    <img src="assets/img/3.jpg" class="card-img-top" alt="Album cover">
-                    <div class="card-body">
-                        <h5 class="card-title">Disturbed</h5>
-                        <p class="card-text">Ten Thousand Fists</p>
-                        <hr>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Tracklist
-                        </button>
-                    </div>
+    </div>
+
+    <div class="modal fade" id="tracklistModal" tabindex="-1" aria-labelledby="tracklistModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="tracklistModalLabel"></h1> 
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </div>
-            <div class="col-xl-2 col-md-3 col-sm-6 col-12 mb-4">
-                <div class="card">
-                    <img src="assets/img/4.jpg" class="card-img-top" alt="Album cover">
-                    <div class="card-body">
-                        <h5 class="card-title">Black Label Society</h5>
-                        <p class="card-text">Catacombs Of The Black Vatican</p>
-                        <hr>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Tracklist
-                        </button>
-                    </div>
+                <div class="modal-body">
+                    <div id="trackStats" class="mb-3 p-3 bg-light rounded"></div>
+                    <div id="modalTracklist"></div>
                 </div>
-            </div>
-            <div class="col-xl-2 col-md-3 col-sm-6 col-12 mb-4">
-                <div class="card">
-                    <img src="assets/img/5.jpg" class="card-img-top" alt="Album cover">
-                    <div class="card-body">
-                        <h5 class="card-title">Zakk Wylde</h5>
-                        <p class="card-text">Book Of Shadows</p>
-                        <hr>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Tracklist
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-2 col-md-3 col-sm-6 col-12 mb-4">
-                <div class="card">
-                    <img src="assets/img/6.jpg" class="card-img-top" alt="Album cover">
-                    <div class="card-body">
-                        <h5 class="card-title">King Diamond</h5>
-                        <p class="card-text">Abigail</p>
-                        <hr>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Tracklist
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-2 col-md-3 col-sm-6 col-12 mb-4">
-                <div class="card">
-                    <img src="assets/img/7.jpg" class="card-img-top" alt="Album cover">
-                    <div class="card-body">
-                        <h5 class="card-title">Alter Bridge</h5>
-                        <p class="card-text">One Day Remains</p>
-                        <hr>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Tracklist
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-2 col-md-3 col-sm-6 col-12 mb-4">
-                <div class="card">
-                    <img src="assets/img/8.jpg" class="card-img-top" alt="Album cover">
-                    <div class="card-body">
-                        <h5 class="card-title">Amon Amarth</h5>
-                        <p class="card-text">Twilight Of The Thunder God</p>
-                        <hr>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Tracklist
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-2 col-md-3 col-sm-6 col-12 mb-4">
-                <div class="card">
-                    <img src="assets/img/9.jpg" class="card-img-top" alt="Album cover">
-                    <div class="card-body">
-                        <h5 class="card-title">Kamelot</h5>
-                        <p class="card-text">Epica</p>
-                        <hr>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Tracklist
-                        </button>
-                    </div>
+                <div class="modal-footer">
+                    <button type="button" id="playOnSpotifyButton" class="btn btn-success me-auto hidden">
+                        <i class="bi bi-spotify"></i> Play on Spotify
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close Tracklist
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <button onclick="topFunction()" id="backToTopBtn" title="Back to Top" class="btn btn-dark">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
+        </svg>
+    </button>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src="scripts/main.js"></script>
 </body>
 
 </html>
