@@ -10,9 +10,25 @@
 </head>
 
 <body>
-    <div id="board"></div>
-    <input type="text" id="guessInput" />
-    <button type="button" id="guessButton">Guess</button>
+    <div id="game-container">
+        <h1>WORDLE</h1>
+
+        <div id="stats-display">
+            <p>Games played:: <span id="games-played">0</span></p>
+            <p>Win percentage: <span id="win-percentage">0%</span></p>
+            <p>Current streak: <span id="current-streak">0</span></p>
+        </div>
+
+        <div id="board"></div>
+        <div id="input-container">
+            <div id="error-message" class="hidden"></div>
+
+            <input type="text" id="guessInput" maxlength="5" placeholder="Ghicește cuvântul..." />
+            <button type="button" id="guessButton">Guess</button>
+        </div>
+
+        <button type="button" id="newGameButton" class="hidden">New Game</button>
+    </div>
 </body>
 
 </html>
