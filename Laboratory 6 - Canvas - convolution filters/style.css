@@ -1,0 +1,29 @@
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: #f4f6fb; color: #111; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 16px; }
+h1 { margin: 10px 0 6px; font-size: 28px; }
+h2 { margin: 0 0 12px; font-size: 18px; }
+.muted { color: #555; }
+.small { font-size: 12px; }
+.card { background: white; border: 1px solid #e5e7ef; border-radius: 12px; padding: 14px; box-shadow: 0 1px 6px rgba(0,0,0,.05); }
+
+.controls .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-bottom: 10px; }
+label { display: grid; gap: 6px; font-size: 13px; }
+label > span { font-weight: 600; }
+select, input[type="file"] { padding: 8px; border: 1px solid #cdd3e1; border-radius: 10px; background: #fff; min-width: 240px; }
+button { padding: 10px 14px; border: 1px solid #cdd3e1; border-radius: 10px; background: #fff; cursor: pointer; font-weight: 600; }
+button:hover { background: #f2f4ff; }
+.inline { display: flex; align-items: center; gap: 8px; margin-left: 8px; }
+.inline input { transform: translateY(1px); }
+.file input { min-width: 320px; }
+
+.canvases { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+canvas { width: 100%; height: auto; border-radius: 10px; background: #111; display: block; }
+.kerneldetails { margin-top: 10px; }
+pre { margin: 10px 0 0; padding: 10px; background: #0b1020; color: #e6e8f2; border-radius: 10px; overflow: auto; }
+@media (max-width: 900px) {
+  .canvases { grid-template-columns: 1fr; }
+  select, input[type="file"] { min-width: 100%; }
+  .file input { min-width: 100%; }
+}

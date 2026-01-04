@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lab 6 — Canvas Convolution Filters</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="wrap">
+    <h1>Lab 6 — Canvas Convolution Filters</h1>
+    <p class="muted">
+      Load an image, choose a preset kernel (3x3 convolution), apply it, reset, or export the result.
+    </p>
+  </header>
+
+  <main class="wrap">
+    <section class="controls card">
+      <div class="row">
+        <label class="file">
+          <span>Image</span>
+          <input id="upload" type="file" accept="image/*" />
+        </label>
+
+        <label>
+          <span>Preset filter</span>
+          <select id="preset"></select>
+        </label>
+
+        <label class="inline">
+          <input id="grayscale" type="checkbox" />
+          <span>Convert to grayscale before filter</span>
+        </label>
+      </div>
+
+      <div class="row">
+        <button id="apply" type="button">Apply</button>
+        <button id="reset" type="button">Reset</button>
+        <button id="export" type="button">Export PNG</button>
+      </div>
+
+      <details class="kerneldetails">
+        <summary>Show kernel</summary>
+        <pre id="kernelView"></pre>
+        <p class="muted small">
+          Convolution: each output pixel is a weighted sum of a 3x3 neighborhood, per channel (R/G/B).
+          Values are clamped to the 0-255 range.
+        </p>
+      </details>
+    </section>
+
+    <section class="canvases">
+      <div class="card">
+        <h2>Original</h2>
+        <canvas id="originalCanvas"></canvas>
+      </div>
+
+      <div class="card">
+        <h2>Processed</h2>
+        <canvas id="targetCanvas"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap muted small">
+    Tip: Edge/emboss filters look best if you check “Convert to grayscale before filter”.
+  </footer>
+
+  <script src="scripts/script.js"></script>
+</body>
+</html>
