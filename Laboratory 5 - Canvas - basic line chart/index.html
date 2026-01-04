@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab 5 - Canvas Charts</title>
+  <link href="styles/style.css" rel="stylesheet" type="text/css" />
+  <script src="scripts/chart.js" type="text/javascript" defer></script>
+</head>
+
+<body class="theme-light">
+  <div class="app">
+    <header class="topbar">
+      <div>
+        <h1>Dynamic Chart Visualization</h1>
+        <p>Canvas API • multiple series • smoothing • chart types • tooltips • export • themes</p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <div class="canvasWrap">
+        <canvas id="chartCanvas" width="900" height="600" aria-label="Chart canvas"></canvas>
+        <div id="tooltip" class="tooltip" hidden></div>
+      </div>
+
+      <aside class="panel">
+        <section class="panelSection">
+          <h2>Playback</h2>
+          <div class="row">
+            <button id="toggleRun" class="primary">Pause</button>
+            <button id="resetChart">Reset</button>
+            <button id="exportPng">Export PNG</button>
+          </div>
+
+          <label class="field">
+            <span>Update interval: <strong id="intervalLabel">1000ms</strong></span>
+            <input id="interval" type="range" min="100" max="2000" step="100" value="1000" />
+          </label>
+        </section>
+
+        <section class="panelSection">
+          <h2>Chart</h2>
+
+          <div class="row">
+            <label class="field compact">
+              <span>Type</span>
+              <select id="chartType">
+                <option value="line">Line</option>
+                <option value="area">Area</option>
+                <option value="bar">Bar</option>
+                <option value="scatter">Scatter</option>
+              </select>
+            </label>
+
+            <label class="field compact">
+              <span>Theme</span>
+              <select id="theme">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="contrast">High contrast</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="check">
+            <input id="showGrid" type="checkbox" checked />
+            <span>Show grid</span>
+          </label>
+
+          <label class="check">
+            <input id="enableSmoothing" type="checkbox" />
+            <span>Smoothing</span>
+          </label>
+
+          <div id="smoothingControls" class="nested" hidden>
+            <div class="row">
+              <label class="field compact">
+                <span>Method</span>
+                <select id="smoothingMethod">
+                  <option value="movingAverage">Moving average</option>
+                  <option value="bezier">Bezier curve</option>
+                </select>
+              </label>
+              <label class="field compact">
+                <span>Window</span>
+                <input id="smoothingWindow" type="number" min="2" max="25" step="1" value="5" />
+              </label>
+            </div>
+            <p class="hint">Moving average uses a trailing window. Bezier curve draws a smooth curve through points.</p>
+          </div>
+        </section>
+
+        <section class="panelSection">
+          <h2>Data</h2>
+
+          <div class="row">
+            <label class="field compact">
+              <span>Min value</span>
+              <input id="minValue" type="number" value="0" />
+            </label>
+            <label class="field compact">
+              <span>Max value</span>
+              <input id="maxValue" type="number" value="600" />
+            </label>
+          </div>
+
+          <div class="series" id="seriesControls"></div>
+        </section>
+
+        <section class="panelSection">
+          <h2>Statistics</h2>
+          <div id="stats" class="stats"></div>
+        </section>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>
