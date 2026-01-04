@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lab 8 — Voice-Controlled Number Guessing</title>
+  <style>
+    :root { color-scheme: light; }
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#f6f7fb; color:#111; }
+    header, main { max-width: 1100px; margin: 0 auto; padding: 16px; }
+    h1 { margin: 10px 0 6px; font-size: 26px; }
+    .muted { color:#555; }
+    .grid { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .card { background:#fff; border:1px solid #e6e8f2; border-radius: 12px; padding: 14px; box-shadow: 0 1px 6px rgba(0,0,0,.05); }
+    .row { display:flex; flex-wrap:wrap; gap:10px; align-items:end; }
+    label { display:grid; gap:6px; font-size: 13px; min-width: 220px; }
+    label > span { font-weight: 650; }
+    select, input[type="range"], input[type="text"] { padding: 8px; border:1px solid #cdd3e1; border-radius: 10px; background:#fff; }
+    input[type="range"] { padding: 0; }
+    button { padding: 10px 14px; border:1px solid #cdd3e1; border-radius: 10px; background:#fff; cursor:pointer; font-weight: 650; }
+    button:hover { background:#f2f4ff; }
+    .pill { display:inline-block; padding: 6px 10px; border-radius:999px; background:#eef1ff; border:1px solid #dde2ff; font-size: 12px; }
+    .status { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .kpi { display:grid; gap:4px; }
+    .kpi b { font-size: 15px; }
+    #history { max-height: 220px; overflow:auto; margin: 10px 0 0; padding-left: 18px; }
+    canvas { width: 100%; height: auto; border-radius: 10px; border:1px solid #e6e8f2; background:#0b1020; }
+    .badges { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+    .badge { padding:6px 10px; border-radius:999px; border:1px solid #cdd3e1; background:#fff; font-size: 12px; }
+    .badge.on { background:#eaffea; border-color:#bfe6bf; }
+    .warn { color:#8a4b00; }
+    .err { color:#8a0000; }
+    @media (max-width: 950px){ .grid{ grid-template-columns:1fr; } label{ min-width: 100%; } }
+  </style>
+  <script defer src="scripts/speech.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Lab 8 — Voice-Controlled Number Guessing Game</h1>
+    <p class="muted">
+      Use your microphone to guess the secret number. You can say a number (e.g., “42”) or commands like
+      <span class="pill">new game</span>, <span class="pill">repeat</span>, <span class="pill">help</span>, <span class="pill">give up</span>.
+    </p>
+  </header>
+
+  <main class="grid">
+    <section class="card">
+      <h2>Controls</h2>
+      <div class="row">
+        <label>
+          <span>Difficulty</span>
+          <select id="difficulty">
+            <option value="easy">Easy (1-50)</option>
+            <option value="medium" selected>Medium (1-100)</option>
+            <option value="hard">Hard (1-1000)</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Language</span>
+          <select id="language">
+            <option value="en-US" selected>English (US)</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Voice</span>
+          <select id="voice"></select>
+        </label>
+      </div>
+
+      <div class="row">
+        <label>
+          <span>Speech rate (<span id="rateVal">1.0</span>)</span>
+          <input id="rate" type="range" min="0.6" max="1.4" step="0.1" value="1.0"/>
+        </label>
+
+        <label>
+          <span>Speech pitch (<span id="pitchVal">1.0</span>)</span>
+          <input id="pitch" type="range" min="0.6" max="1.6" step="0.1" value="1.0"/>
+        </label>
+
+        <label>
+          <span>Timeout (seconds)</span>
+          <select id="timeout">
+            <option value="0">Off</option>
+            <option value="5">5</option>
+            <option value="8" selected>8</option>
+            <option value="12">12</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="row" style="min-width:auto;">
+          <input id="continuous" type="checkbox"/>
+          <span style="font-weight:650;">Continuous listening</span>
+        </label>
+
+        <label class="row" style="min-width:auto;">
+          <input id="multiplayer" type="checkbox"/>
+          <span style="font-weight:650;">Multiplayer (2 players)</span>
+        </label>
+      </div>
+
+      <div class="row">
+        <button id="start" type="button">Start listening</button>
+        <button id="stop" type="button">Stop</button>
+        <button id="newGame" type="button">New game</button>
+        <button id="repeat" type="button">Repeat hint</button>
+        <button id="help" type="button">Help</button>
+        <button id="giveUp" type="button">Give up</button>
+      </div>
+
+      <p id="supportMsg" class="muted" style="margin:10px 0 0;"></p>
+    </section>
+
+    <section class="card">
+      <h2>Game state</h2>
+      <div class="status">
+        <div class="kpi"><span class="muted">Status</span><b id="status">Ready</b></div>
+        <div class="kpi"><span class="muted">Player</span><b id="player">—</b></div>
+        <div class="kpi"><span class="muted">Attempts</span><b id="attempts">0</b></div>
+        <div class="kpi"><span class="muted">Range</span><b id="range">—</b></div>
+        <div class="kpi"><span class="muted">Time</span><b id="time">0.0s</b></div>
+      </div>
+      <hr style="border:none;border-top:1px solid #eef0f7;margin:12px 0;"/>
+      <div>
+        <div class="muted">Last transcript</div>
+        <div><b id="transcript">—</b> <span id="confidence" class="muted"></span></div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="muted">Hint</div>
+        <div id="hint">—</div>
+      </div>
+
+      <h3 style="margin:14px 0 8px;">Guess history</h3>
+      <ol id="history"></ol>
+    </section>
+
+    <section class="card">
+      <h2>Range visualization</h2>
+      <p class="muted">The dark bar shows the full range; the highlighted area is the remaining valid interval. Markers are your guesses.</p>
+      <canvas id="rangeCanvas" width="1000" height="140"></canvas>
+    </section>
+
+    <section class="card">
+      <h2>Stats & achievements</h2>
+      <div class="row">
+        <div class="kpi"><span class="muted">Games</span><b id="games">0</b></div>
+        <div class="kpi"><span class="muted">Win rate</span><b id="winrate">0%</b></div>
+        <div class="kpi"><span class="muted">Avg attempts</span><b id="avgAttempts">—</b></div>
+        <div class="kpi"><span class="muted">Avg time (wins)</span><b id="avgTime">—</b></div>
+        <div class="kpi"><span class="muted">Common guess range</span><b id="commonRange">—</b></div>
+        <div class="kpi"><span class="muted">Best attempts</span><b id="bestAttempts">—</b></div>
+        <div class="kpi"><span class="muted">Best score</span><b id="bestScore">—</b></div>
+      </div>
+
+
+      <h3 style="margin:14px 0 8px;">Attempts distribution</h3>
+      <canvas id="statsCanvas" width="1000" height="220"></canvas>
+
+      <h3 style="margin:14px 0 8px;">Achievements</h3>
+      <div class="badges">
+        <span id="achLucky" class="badge">🍀 Lucky (win in 1)</span>
+        <span id="achSkilled" class="badge">🏅 Skilled (≤5 guesses)</span>
+        <span id="achDedicated" class="badge">🔥 Dedicated (10 games)</span>
+        <span id="achPerfect" class="badge">🎯 Perfect confidence</span>
+      </div>
+      <p class="muted" style="margin-top:8px;">Stats + achievements are stored in <code>localStorage</code>.</p>
+    </section>
+  </main>
+</body>
+</html>
